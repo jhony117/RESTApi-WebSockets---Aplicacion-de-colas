@@ -20,6 +20,7 @@ function main() {
   const httpServer = createServer(server.app);
   WssService.initWss({server : httpServer, path:''})
  
+  server.setRoutes(AppRoutes.routes);
 
 httpServer.listen(envs.PORT, () => {
    console.log(`Server running op port :${envs.PORT}`);

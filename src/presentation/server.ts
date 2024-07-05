@@ -33,7 +33,7 @@ export class Server {
         this.app.use( express.static( this.publicPath ) );
     
         //* Routes
-        this.app.use( this.routes );
+        // this.app.use( this.routes );
     
         //* SPA /^\/(?!api).*/  <== Únicamente si no empieza con la palabra api
         this.app.get(/^\/(?!api).*/, (req, res) => {
@@ -41,6 +41,10 @@ export class Server {
           res.sendFile(indexPath);
         });
   }}
+
+  public setRoutes(router:Router) {
+    this.app.use(router);
+  }
 
   
   
