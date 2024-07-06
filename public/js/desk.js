@@ -4,7 +4,10 @@
 const lblPending = document.querySelector('#lbl-pending');
 const deskHeader = document.querySelector('h1');
 const noMoreAlert = document.querySelector('.alert');
+const lblCurrentTicket =  document.querySelector('small');
 
+const btnDraw = document.querySelector('#btn-draw');
+const btnDone = document.querySelector('#btn-done');
 
 const searchParams = new URLSearchParams(window.location.search);
 
@@ -17,6 +20,7 @@ throw new Error('Escritorio es requerido');
 }
 
 const deskNumber = searchParams.get('escritorio');
+let workingTicket = null;
 deskHeader.innerHTML =deskNumber;
 
 
@@ -34,6 +38,30 @@ async function loadInitialCount() {
    checkTicketCount(pendingTickets.length);
 }
 
+async function getTicket(){
+  await finishTicket();
+ const {status, ticket, message} =  await fetch(`/api/ticket/draw`)
+ .then(resp => resp.json());
+ if (status === 'error') {
+  lblCurrentTicket.innerText = message;
+  return;
+ }
+ workingTicket = ticket;
+ lblCurrentTicket.innetText = ticket.number;
+}
+
+async function finishTicket() {
+  if(!workingTicket) return;
+  const {message, status} =  await fetch(`api/ticket/${workingTicket.id}`, {
+    method : 'PUT'
+  }).then(resp => resp.json());
+  if (status === 'error'){  lblCurrentTicket.innerText = message;
+  return;
+}
+lblCurrentTicket.innerText ='nadie';
+workingTicket =null;
+
+}
 
 
 function connectToWebSockets() {
@@ -65,6 +93,11 @@ checkTicketCount(payload);
   
   }
   
+
+  //listener
+  btnDraw.addEventListener('click', getTicket);
+
+  btnDone.addEventListener('click', finishTicket);
   
 
 
@@ -75,3 +108,6 @@ checkTicketCount(payload);
 //init 
 loadInitialCount();
 connectToWebSockets();
+
+
+// todo -> practica tu CRUD tanto en front como en back

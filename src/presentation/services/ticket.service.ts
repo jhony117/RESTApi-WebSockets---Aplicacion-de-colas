@@ -9,7 +9,7 @@ export class TicketService {
         private readonly wssService = WssService.instance,
     ){}
 
-    public readonly tickets:Ticket[] =[
+    public  tickets:Ticket[] =[
         {id:UuidAdapter.v4(), number : 1, createdAt: new Date(), done:false},
         {id:UuidAdapter.v4(), number : 2, createdAt: new Date(), done:false},
         {id:UuidAdapter.v4(), number : 3, createdAt: new Date(), done:false},
@@ -57,6 +57,8 @@ export class TicketService {
 
         //{...ticket} esto rompe la relacion de la referemcia
         this.workingOnTickets.unshift({...ticket});
+        this.onTicketNumberChanged();
+        this.onWorkingOnChanged();
 
         //todo : WS
 
@@ -67,7 +69,7 @@ export class TicketService {
         const ticket = this.tickets.find(t => t.id === id);
         if (!ticket) return {status :'error', message : 'Ticket no encontrado'};
 
-        this.tickets.map(ticket => {
+      this.tickets =  this.tickets.map(ticket => {
             if (ticket.id == id) {
                 ticket.done === true;
             }
@@ -81,5 +83,9 @@ export class TicketService {
     private onTicketNumberChanged(){
 this.wssService.sendMesage(`on-ticket-count-changed`, this.pendingTickets.length)
     }
+
+    private onWorkingOnChanged(){
+        this.wssService.sendMesage(`on-working-changed`, this.lastWorkingOnTickets);
+            }
 
 }

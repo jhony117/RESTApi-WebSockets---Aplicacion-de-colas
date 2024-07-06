@@ -22,10 +22,10 @@ export class WssService {
         this.wss =  new WebSocketServer({server, path});
 
     }
-
+//! : por que mi instancia  de WssService no funciona ??
     static get instance(): WssService{
         if(!WssService._instance){
-            throw 'WeeService is not initialized'
+            throw 'WssService is not initialized'
         }
 
         return WssService._instance;
@@ -53,3 +53,5 @@ export class WssService {
         });
     } 
 }
+
+//WeeService

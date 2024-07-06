@@ -11,7 +11,7 @@ import { WssService } from './presentation/services/wss.service';
 
 
 function main() {
-
+try{
   const server = new Server({
     port: envs.PORT,
     routes: AppRoutes.routes,
@@ -25,4 +25,8 @@ function main() {
 httpServer.listen(envs.PORT, () => {
    console.log(`Server running op port :${envs.PORT}`);
 })
+} catch(e){
+  console.log(e);
+}
+
 }
